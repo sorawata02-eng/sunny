@@ -1,0 +1,210 @@
+/* Sunny's public pages.
+ *
+ * The palette is lifted from the app's own tokens (Sunny/DesignSystem/Tokens.swift):
+ * sunrise #FF7A1A on near-white, black ink, #6E6E6E secondary. These pages exist so
+ * App Review can open them, so they are built to load instantly, read well on a phone,
+ * and stay legible in dark mode — nothing else.
+ */
+
+:root {
+  --accent: #ff7a1a;
+  --bg: #fdfcfb;
+  --surface: #ffffff;
+  --ink: #111111;
+  --ink-secondary: #55534f;
+  --ink-tertiary: #8a8782;
+  --rule: #e7e3de;
+  --measure: 34rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #ff9445;
+    --bg: #121110;
+    --surface: #1b1a18;
+    --ink: #f6f4f1;
+    --ink-secondary: #b4afa8;
+    --ink-tertiary: #8a857d;
+    --rule: #2e2c29;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+               "Yu Gothic", Meiryo, "Segoe UI", Roboto, sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  padding: 0 1.25rem 4rem;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+.skip:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 10;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+}
+
+/* Masthead */
+
+.masthead {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 2rem 0 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.wordmark {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.masthead nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  font-size: 0.95rem;
+}
+
+.masthead nav a {
+  color: var(--ink-secondary);
+  text-decoration: none;
+}
+.masthead nav a:hover { color: var(--ink); }
+.masthead nav a[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Content */
+
+main {
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 1.9rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin: 2.5rem 0 0.25rem;
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: 1.12rem;
+  line-height: 1.5;
+  margin: 2.25rem 0 0.5rem;
+  text-wrap: balance;
+}
+
+p { margin: 0 0 1rem; }
+
+.updated {
+  color: var(--ink-tertiary);
+  font-size: 0.92rem;
+  margin-bottom: 0.5rem;
+}
+
+.lede {
+  font-size: 1.06rem;
+  color: var(--ink-secondary);
+}
+
+a { color: var(--accent); }
+a:hover { color: var(--ink); }
+
+section p:last-child { margin-bottom: 0; }
+
+/* A plain card for the support page's contact block. */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 1.25rem 1.25rem 1.35rem;
+  margin: 1.5rem 0;
+}
+
+.card h2 { margin-top: 0; }
+
+.email {
+  font-size: 1.1rem;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.meta {
+  color: var(--ink-tertiary);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+dl { margin: 0; }
+dt {
+  font-weight: 600;
+  margin-top: 1.25rem;
+}
+dd {
+  margin: 0.25rem 0 0;
+  color: var(--ink-secondary);
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 3.5rem 0 0;
+}
+
+/* The English half of a bilingual page. */
+
+.alt { color: var(--ink-secondary); }
+.alt h1, .alt h2 { color: var(--ink); }
+
+footer {
+  max-width: var(--measure);
+  margin: 3rem auto 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-tertiary);
+  font-size: 0.92rem;
+}
+
+footer p { margin: 0; }
+
+@media (max-width: 30rem) {
+  body { font-size: 16px; }
+  h1 { font-size: 1.6rem; }
+}
