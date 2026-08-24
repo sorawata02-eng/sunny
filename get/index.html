@@ -8,12 +8,17 @@
 <!-- This page exists to be left. Instagram will not take an App Store link in a bio,
      so the bio points here and here points at the App Store.
 
-     Three ways out, in order, because the first two are blocked in some in-app
-     browsers and the page must never be a dead end:
-       1. `location.replace` on parse — fastest, and `replace` rather than `href` so
-          Back returns to Instagram instead of bouncing through this page again.
-       2. `<meta http-equiv="refresh">` — covers a browser with JavaScript off.
-       3. The button below — covers a webview that blocks both.
+     Four ways out, in order, because each is blocked somewhere and the page must never
+     be a dead end:
+       1. `itms-apps://` on iOS — the App Store's own scheme, which iOS hands to the
+          App Store app. This is what escapes Instagram's in-app browser; a plain
+          https redirect can render the App Store web page *inside* the WebView, which
+          has no Get button and no way forward.
+       2. `location.replace` to the https URL — desktop, Android, and iOS 1.5s later if
+          the scheme was refused. `replace` rather than `href` so Back returns to
+          Instagram instead of bouncing through this page again.
+       3. `<meta http-equiv="refresh">` — covers a browser with JavaScript off.
+       4. The button below — covers a webview that blocks all three.
 
      `?s=` names the source and is passed to Apple as `ct`, so App Store Connect's
      campaign report can tell Instagram apart from anywhere else this is pasted:
@@ -24,13 +29,36 @@
 <meta http-equiv="refresh" content="0; url=https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
 <script>
   (function () {
-    var base = "https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297";
+    var id = "6799345297";
+    var web = "https://apps.apple.com/jp/app/sunny-wake-up-alarm/id" + id;
+
     var source = null;
     try {
       source = new URLSearchParams(window.location.search).get("s");
     } catch (e) { /* very old webview: go without the campaign tag rather than not at all */ }
-    var url = source ? base + "?ct=" + encodeURIComponent(source.slice(0, 40)) + "&mt=8" : base;
-    window.location.replace(url);
+    var tag = source ? "?ct=" + encodeURIComponent(source.slice(0, 40)) + "&mt=8" : "";
+
+    // On an iPhone, jump out through the App Store's own URL scheme first.
+    //
+    // This is the part a plain redirect gets wrong. Instagram opens links in its own
+    // in-app browser, and sending that WebView to `https://apps.apple.com/...` can just
+    // render the App Store *web page* inside it -- a dead end with no Get button.
+    // `itms-apps://` is a scheme iOS hands to the App Store app itself, so the tap
+    // leaves the WebView instead of navigating inside it.
+    //
+    // Deliberately not Macintosh: `itms-apps://` there opens the *Mac* App Store, which
+    // has no iPhone app to show. Desktop gets the web page, which is the right answer.
+    var iOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+
+    if (iOS) {
+      window.location.replace("itms-apps://apps.apple.com/jp/app/id" + id + tag);
+      // If the scheme was refused we are still here a moment later, so take the web
+      // route. If it worked, this page is already in the background and the App Store
+      // is open; navigating a backgrounded page costs nothing.
+      setTimeout(function () { window.location.replace(web + tag); }, 1500);
+    } else {
+      window.location.replace(web + tag);
+    }
   })();
 </script>
 

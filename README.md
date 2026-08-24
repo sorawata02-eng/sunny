@@ -12,9 +12,18 @@ only stops once you have completed a short exercise, verified by the camera.
 ## `/get/` is the link to paste, not the App Store URL
 
 Instagram will not take an App Store link in a bio, so the bio points at
-`.../sunny/get/` and that points at the App Store. It is a page that exists to be left:
-it redirects on parse, and carries a `<meta refresh>` and a visible badge behind that,
-because in-app browsers block one or the other and the link must never dead-end.
+`.../sunny/get/` and that points at the App Store.
+
+**Changing the domain is only half of it.** Instagram opens links in its own in-app
+browser, and sending that WebView to `https://apps.apple.com/...` can render the App
+Store *web page* inside it — no Get button, no way forward. So on iOS the page leaves
+through `itms-apps://`, a scheme iOS hands to the App Store app itself, which is what
+gets the tap out of the WebView. Desktop and Android take the https URL; `itms-apps://`
+on a Mac would open the *Mac* App Store, which has no iPhone app to show.
+
+Four exits in all — the scheme, the https redirect, a `<meta refresh>` for
+JavaScript-off, and a visible badge for a WebView that blocks all three. A link in a bio
+must never dead-end.
 
 Add `?s=` to name the source and it reaches Apple as `ct`, so App Store Connect's
 campaign report can tell one placement from another:
