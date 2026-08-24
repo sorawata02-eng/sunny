@@ -2,93 +2,93 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sunny をダウンロード</title>
-
-<!-- This page exists to be left. Instagram will not take an App Store link in a bio,
-     so the bio points here and here points at the App Store.
-
-     Four ways out, in order, because each is blocked somewhere and the page must never
-     be a dead end:
-       1. `itms-apps://` on iOS — the App Store's own scheme, which iOS hands to the
-          App Store app. This is what escapes Instagram's in-app browser; a plain
-          https redirect can render the App Store web page *inside* the WebView, which
-          has no Get button and no way forward.
-       2. `location.replace` to the https URL — desktop, Android, and iOS 1.5s later if
-          the scheme was refused. `replace` rather than `href` so Back returns to
-          Instagram instead of bouncing through this page again.
-       3. `<meta http-equiv="refresh">` — covers a browser with JavaScript off.
-       4. The button below — covers a webview that blocks all three.
-
-     `?s=` names the source and is passed to Apple as `ct`, so App Store Connect's
-     campaign report can tell Instagram apart from anywhere else this is pasted:
-       .../sunny/get/?s=instagram    .../sunny/get/?s=tiktok -->
-
+<meta name="description" content="Sunny: Wake Up Alarm を App Store で入手する。">
 <meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Safari on iOS shows a native "App Store で見る" banner from this. -->
+<meta name="apple-itunes-app" content="app-id=6799345297">
 <link rel="canonical" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
-<meta http-equiv="refresh" content="0; url=https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
+<link rel="apple-touch-icon" href="../img/mark.png">
+<link rel="stylesheet" href="get.css">
+
+<!-- This page exists to be left. Instagram will not take an App Store link in a
+     bio, so the bio points here and here points at the App Store.
+
+     Changing the domain is only half of it: Instagram opens links in its own
+     WebView, and sending that WebView to apps.apple.com can render the App Store
+     *web page* inside it, with no Get button and no way forward. The escape is a
+     scheme the host app understands — `instagram://extbrowser` — which hands the
+     URL to the real browser. See inapp-browser.js for the per-app strategies and
+     the caveat that none of them are documented by Meta or Apple.
+
+     Ported from a version already shipping for another app, with its tests:
+     `node --test Tools/webtests/inapp-browser.test.js`. -->
+
 <script>
-  (function () {
-    var id = "6799345297";
-    var web = "https://apps.apple.com/jp/app/sunny-wake-up-alarm/id" + id;
+  /* Switch to the loading state before anything paints. Without JavaScript this
+     never runs, so the download button below is visible immediately rather than
+     a spinner that would never resolve. */
+  document.documentElement.setAttribute('data-state', 'loading');
 
-    var source = null;
-    try {
-      source = new URLSearchParams(window.location.search).get("s");
-    } catch (e) { /* very old webview: go without the campaign tag rather than not at all */ }
-    var tag = source ? "?ct=" + encodeURIComponent(source.slice(0, 40)) + "&mt=8" : "";
-
-    // On an iPhone, jump out through the App Store's own URL scheme first.
-    //
-    // This is the part a plain redirect gets wrong. Instagram opens links in its own
-    // in-app browser, and sending that WebView to `https://apps.apple.com/...` can just
-    // render the App Store *web page* inside it -- a dead end with no Get button.
-    // `itms-apps://` is a scheme iOS hands to the App Store app itself, so the tap
-    // leaves the WebView instead of navigating inside it.
-    //
-    // Deliberately not Macintosh: `itms-apps://` there opens the *Mac* App Store, which
-    // has no iPhone app to show. Desktop gets the web page, which is the right answer.
-    var iOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-
-    if (iOS) {
-      window.location.replace("itms-apps://apps.apple.com/jp/app/id" + id + tag);
-      // If the scheme was refused we are still here a moment later, so take the web
-      // route. If it worked, this page is already in the background and the App Store
-      // is open; navigating a backgrounded page costs nothing.
-      setTimeout(function () { window.location.replace(web + tag); }, 1500);
-    } else {
-      window.location.replace(web + tag);
+  /* Safety net: if main.js fails to load at all, never leave the visitor
+     staring at 「App Store を開いています…」 forever. */
+  window.setTimeout(function () {
+    var root = document.documentElement;
+    if (root.getAttribute('data-state') === 'loading') {
+      root.setAttribute('data-state', 'fallback');
     }
-  })();
+  }, 4000);
 </script>
-
-<style>
-  :root { color-scheme: light; }
-  body {
-    margin: 0; min-height: 100svh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 22px; padding: 32px;
-    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
-    background: #fff; color: #000; text-align: center;
-  }
-  .mark { width: 64px; aspect-ratio: 320 / 131; background: currentColor;
-          -webkit-mask: url("../img/mark.png") center / contain no-repeat;
-          mask: url("../img/mark.png") center / contain no-repeat; }
-  @supports not (mask: url("../img/mark.png")) {
-    .mark { background: url("../img/mark.png") center / contain no-repeat; }
-  }
-  p { margin: 0; color: #6E6E6E; font-size: 1rem; line-height: 1.7; }
-  a.badge { display: inline-block; line-height: 0; }
-  a.badge img { height: 54px; width: auto; }
-  a.home { color: #9A9A9A; font-size: .88rem; text-underline-offset: 3px; }
-</style>
 </head>
+
 <body>
+<main class="bridge">
   <span class="mark" aria-hidden="true"></span>
-  <p>App Store に移動しています…</p>
-  <a class="badge" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
-    <img src="../img/appstore-badge.svg" width="109" height="40" alt="App Store でダウンロード">
-  </a>
+
+  <!-- While the automatic redirect is being attempted. -->
+  <div class="state state--loading">
+    <p class="status" role="status">App&nbsp;Store を開いています…</p>
+    <div class="spinner" aria-hidden="true"><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- Only if the automatic redirect did not happen. -->
+  <div class="state state--fallback">
+    <!-- A real link: it works with JavaScript switched off. main.js appends the
+         `ct` campaign tag to this href on load — change the URL here only. -->
+    <a class="cta" id="ctaLink" data-appstore-link
+       href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
+      <img src="../img/appstore-badge.svg" width="109" height="40" alt="App Store でダウンロード">
+    </a>
+
+    <p class="hint">
+      開かないときは <strong class="dots">•••</strong> から
+      <strong>「ブラウザで開く」</strong>を選んでください
+    </p>
+
+    <div class="copy">
+      <label class="visually-hidden" for="linkField">App Store のリンク</label>
+      <div class="copy__row">
+        <input class="copy__field" id="linkField" type="text" readonly spellcheck="false"
+               value="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
+        <button class="copy__btn" id="copyBtn" type="button">コピー</button>
+      </div>
+      <p class="copy__status" id="copyStatus" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <!-- Instead of everything above, on Android. Sunny is iPhone-only, so there is
+       no redirect to make and no App Store link worth showing. -->
+  <div class="state state--android">
+    <p class="android-note">Sunny は iPhone 専用です。<br>iOS 26 以降の iPhone でご利用ください。</p>
+  </div>
+
   <a class="home" href="../">Sunny について</a>
+</main>
+
+<script src="inapp-browser.js"></script>
+<script src="main.js"></script>
 </body>
 </html>

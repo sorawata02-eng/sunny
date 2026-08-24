@@ -14,22 +14,39 @@ only stops once you have completed a short exercise, verified by the camera.
 Instagram will not take an App Store link in a bio, so the bio points at
 `.../sunny/get/` and that points at the App Store.
 
-**Changing the domain is only half of it.** Instagram opens links in its own in-app
-browser, and sending that WebView to `https://apps.apple.com/...` can render the App
-Store *web page* inside it — no Get button, no way forward. So on iOS the page leaves
-through `itms-apps://`, a scheme iOS hands to the App Store app itself, which is what
-gets the tap out of the WebView. Desktop and Android take the https URL; `itms-apps://`
-on a Mac would open the *Mac* App Store, which has no iPhone app to show.
+**Changing the domain is only half of it**, and the half that is easy to miss. Instagram
+opens links in its own WebView, and sending that WebView to `https://apps.apple.com/...`
+can render the App Store *web page* inside it — no Get button, no way forward. A plain
+redirect adds a hop without escaping the WebView.
 
-Four exits in all — the scheme, the https redirect, a `<meta refresh>` for
-JavaScript-off, and a visible badge for a WebView that blocks all three. A link in a bio
-must never dead-end.
+The escape is a scheme the host app understands: `instagram://extbrowser` hands the URL
+to the real browser, `x-safari-` does the same in Facebook and Messenger, and Android
+uses an `intent://` URL. **None of these are documented by Meta or Apple.** They work
+today and have for years; they can stop without notice. That is why every one of them is
+paired with a visible fallback.
 
-Add `?s=` to name the source and it reaches Apple as `ct`, so App Store Connect's
-campaign report can tell one placement from another:
+Two things about the timing, both learned the hard way:
+
+- **The escape must fire synchronously inside a click handler.** iOS only honours a
+  navigation to a custom scheme while it still considers itself in a user gesture, so the
+  automatic attempt on page load is best-effort only. When it does not fire, the page
+  shows a button after 1.4s and a real tap does what the load could not.
+- **The automatic attempt runs once per session.** Without that guard, pressing Back from
+  the App Store loads the page, which redirects again, and the visitor is trapped.
+
+Android gets a notice rather than a redirect — Sunny is iPhone-only, so there is nothing
+to send them to.
+
+`?s=` names the source and reaches Apple as `ct`, so App Store Connect's campaign report
+can tell one placement from another:
 
     .../sunny/get/?s=instagram
     .../sunny/get/?s=tiktok
+
+`get/inapp-browser.js` is a verbatim copy of a module already shipping for another app.
+Its tests came with it and live outside `Web/`, because everything in `Web/` is published:
+
+    node --test Tools/webtests/inapp-browser.test.js     # 59 tests
 
 ## The root is the landing page now
 
