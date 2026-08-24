@@ -25,9 +25,6 @@
 <!-- Icons used more than once. The sunrise mark is not here: it is the app icon
      itself, painted as a CSS mask — see `.wordmark .mark` in site.css. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="apple" viewBox="0 0 24 24">
-    <path d="M17.05 12.54c-.02-2.17 1.77-3.21 1.85-3.26-1.01-1.48-2.58-1.68-3.14-1.7-1.34-.13-2.61.79-3.29.79-.68 0-1.72-.77-2.83-.75-1.46.02-2.8.85-3.55 2.15-1.51 2.62-.39 6.51 1.09 8.64.72 1.04 1.58 2.21 2.71 2.17 1.09-.04 1.5-.7 2.82-.7 1.31 0 1.69.7 2.84.68 1.17-.02 1.91-1.06 2.63-2.11.83-1.21 1.17-2.38 1.19-2.44-.03-.01-2.28-.88-2.3-3.47zM14.9 6.09c.6-.73 1.01-1.74.9-2.75-.87.04-1.92.58-2.54 1.3-.55.64-1.04 1.67-.91 2.66.97.08 1.95-.49 2.55-1.21z"/>
-  </symbol>
   <symbol id="chevron" viewBox="0 0 24 24">
     <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
@@ -43,13 +40,7 @@
     </nav>
     <!-- APP-STORE-URL: replace every href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297" with the real product page
          once the numeric Apple ID is known. There are four on this page. -->
-    <a class="store" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
-      <svg aria-hidden="true"><use href="#apple"/></svg>
-      <span>
-        <span class="small">ダウンロード</span>
-        <span class="big">App Store</span>
-      </span>
-    </a>
+    <a class="store" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297"><img src="img/appstore-badge.svg" width="109" height="40" alt="App Store でダウンロード"></a>
   </div>
 </header>
 
@@ -81,21 +72,15 @@
         </p>
 
         <div class="cta">
-          <a class="store" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
-            <svg aria-hidden="true"><use href="#apple"/></svg>
-            <span>
-              <span class="small">ダウンロード</span>
-              <span class="big">App Store</span>
-            </span>
-          </a>
+          <a class="store" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297"><img src="img/appstore-badge.svg" width="109" height="40" alt="App Store でダウンロード"></a>
         </div>
 
         <p class="fineprint">iPhone・iOS 26以降。日本語。ご利用には有料サブスクリプションが必要です。</p>
       </div>
 
       <div class="hero-art">
-        <div class="phone"><span class="screen"><img src="img/home.webp" width="660" height="1434" alt="Sunnyのホーム画面。次のアラームは6時30分、連続記録は34日。"><span class="island"></span></span></div>
-        <div class="phone"><span class="screen"><img src="img/camera.webp" width="660" height="1431" alt="腕立て伏せのミッション中。カメラが姿勢を捉え、回数を数えている。"><span class="island"></span></span></div>
+        <div class="phone"><span class="screen"><img src="img/home.webp" width="660" height="1434" alt="Sunnyのホーム画面。次のアラームは6時30分、連続記録は34日。"></span><img class="frame" src="img/phone-frame.webp" alt="" aria-hidden="true"></div>
+        <div class="phone"><span class="screen"><img src="img/camera.webp" width="660" height="1431" alt="腕立て伏せのミッション中。カメラが姿勢を捉え、回数を数えている。"></span><img class="frame" src="img/phone-frame.webp" alt="" aria-hidden="true"></div>
       </div>
     </div>
   </section>
@@ -113,7 +98,7 @@
         <li class="step">
           <div class="step-card">
             <span class="step-num">01</span>
-            <div class="phone"><span class="screen"><img src="img/editor.webp" width="660" height="1434" alt="アラームを編集する画面。時刻、繰り返し、ミッション、サウンドを設定。" loading="lazy"><span class="island"></span></span></div>
+            <div class="phone"><span class="screen"><img src="img/editor.webp" width="660" height="1434" alt="アラームを編集する画面。時刻、繰り返し、ミッション、サウンドを設定。" loading="lazy"></span><img class="frame" src="img/phone-frame.webp" alt="" aria-hidden="true"></div>
           </div>
           <h3>アラームをつくる</h3>
           <p>時刻を決めて、ミッションを選ぶだけ。スクワット、腕立て伏せ、プランク、ダンス、シェイク、計算の6種類から選べます。</p>
@@ -122,7 +107,7 @@
         <li class="step">
           <div class="step-card">
             <span class="step-num">02</span>
-            <div class="phone"><span class="screen"><img src="img/camera.webp" width="660" height="1431" alt="腕立て伏せのミッション中。カメラが姿勢を捉え、回数を数えている。" loading="lazy"><span class="island"></span></span></div>
+            <div class="phone"><span class="screen"><img src="img/camera.webp" width="660" height="1431" alt="腕立て伏せのミッション中。カメラが姿勢を捉え、回数を数えている。" loading="lazy"></span><img class="frame" src="img/phone-frame.webp" alt="" aria-hidden="true"></div>
           </div>
           <h3>ミッションをこなす</h3>
           <p>鳴ったら、前の晩に選んでおいたミッションを終えるまで止まりません。回数はカメラが数えます。</p>
@@ -131,7 +116,7 @@
         <li class="step">
           <div class="step-card">
             <span class="step-num">03</span>
-            <div class="phone"><span class="screen"><img src="img/achievements.webp" width="660" height="1434" alt="実績の画面。20個のうち11個を獲得している。" loading="lazy"><span class="island"></span></span></div>
+            <div class="phone"><span class="screen"><img src="img/achievements.webp" width="660" height="1434" alt="実績の画面。20個のうち11個を獲得している。" loading="lazy"></span><img class="frame" src="img/phone-frame.webp" alt="" aria-hidden="true"></div>
           </div>
           <h3>止まったころには、起きている</h3>
           <p>終えたときには、もう体が動いています。続けた朝は連続記録と実績として積み上がります。</p>
@@ -239,13 +224,7 @@
   <div class="wrap">
     <div class="top">
       <a class="wordmark" href="#top"><span class="mark" aria-hidden="true"></span>Sunny</a>
-      <a class="store" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
-        <svg aria-hidden="true"><use href="#apple"/></svg>
-        <span>
-          <span class="small">ダウンロード</span>
-          <span class="big">App Store</span>
-        </span>
-      </a>
+      <a class="store" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297"><img src="img/appstore-badge.svg" width="109" height="40" alt="App Store でダウンロード"></a>
     </div>
 
     <div class="cols">

@@ -151,79 +151,64 @@ section { padding-block: clamp(72px, 11vw, 140px); }
 }
 
 /* ---- App Store button --------------------------------------------------- */
-/* A stand-in for Apple's official badge artwork — same shape, same wording, drawn
- * rather than downloaded so the page is complete offline. Apple's marketing
- * guidelines want their supplied badge, so swap the <img> in before launch. */
+/*
+ * Apple's own badge artwork, the Japanese one, taken from their marketing resources
+ * (`Download_on_the_App_Store_Badge_JP_RGB_blk`). It replaced a hand-drawn stand-in --
+ * a black pill with an Apple glyph and the words set in Inter -- which was close enough
+ * to read as the badge and wrong enough to look like a knock-off.
+ *
+ * Apple's guidelines: do not redraw it, do not recolour it, keep clear space around it
+ * of at least a quarter of its height, and never render it under 40px tall on the web.
+ * Hence sizes below rather than any restyling.
+ */
 
 .store {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  background: var(--ink);
-  color: #fff;
-  text-decoration: none;
-  padding: 11px 20px 12px;
-  border-radius: 11px;
+  display: inline-block;
+  line-height: 0;
   transition: transform .15s ease, opacity .15s ease;
 }
-.store:hover { transform: translateY(-1px); opacity: .88; }
-.store svg { width: 26px; height: 26px; flex: none; fill: #fff; }
-.store span { display: block; line-height: 1.15; }
-.store .small { font-size: 0.66rem; letter-spacing: .02em; opacity: .9; }
-.store .big { font-size: 1.16rem; font-weight: 700; letter-spacing: -0.01em; }
+.store:hover { transform: translateY(-1px); opacity: .85; }
+.store img { height: 54px; width: auto; }
 
 /* ---- Phone mockup ------------------------------------------------------- */
 /*
- * The screenshot sits *inside* the frame, which sounds obvious and was not what the
- * first version did. It inset the image with `top/bottom: 2.4%; left/right: 2.7%` —
- * and a percentage inset resolves against the containing block's **height** for
- * top/bottom but its **width** for left/right. On a phone twice as tall as it is wide
- * that made the top bezel nearly four times the side bezel, and the screen's corner
- * radius no longer followed the frame's. The result read exactly as it was: a
- * screenshot pasted on top of a black rectangle.
+ * The frame is `Tools/appstore/frame.py`, which draws the device with the same code as
+ * the App Store screenshots: titanium rail, side buttons, bezel, Dynamic Island. One
+ * transparent overlay, 8 KB, shared by every phone on the page; each screenshot sits
+ * behind it in the punched-out screen.
  *
- * Now the bezel is `padding` in percent, which resolves against width on all four
- * sides and so is uniform, and the image drives the height. Every radius below is the
- * real device's, expressed against this box.
+ * It replaced a rounded rectangle drawn in CSS with the screenshot inset by percentages
+ * -- which, because a percentage inset resolves against height for top/bottom and width
+ * for left/right, gave a top bezel four times the sides and corners that did not follow
+ * the frame. It looked like a screenshot pasted onto a black shape, because it was one.
+ *
+ * **Every number below comes from frame.py's output.** Re-run it and paste the new
+ * geometry if the frame is ever redrawn; the hole and the screenshot behind it have to
+ * agree to the pixel or the bezel shows a seam.
  */
 
 .phone {
-  background: var(--bezel);
-  padding: 2.3%;                       /* uniform: % padding is always of width */
-  border-radius: 14% / 6.6%;           /* 62pt corner on a 456pt-wide device */
-  box-shadow: 0 30px 60px -22px rgba(0,0,0,.30), 0 10px 24px -12px rgba(0,0,0,.18);
+  position: relative;
+  aspect-ratio: 648 / 1330;
+  /* `drop-shadow` rather than `box-shadow`: this box is transparent outside the phone's
+   * silhouette, and box-shadow would cast a rectangle behind it. */
+  filter: drop-shadow(0 26px 40px rgba(0,0,0,.22)) drop-shadow(0 6px 14px rgba(0,0,0,.12));
 }
 
 .phone .screen {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  border-radius: 12.3% / 5.66%;        /* device radius less the bezel */
-  background: #000;
-}
-
-.phone img { display: block; width: 100%; height: auto; }
-
-/* The Dynamic Island. The simulator draws the status bar but leaves the cut-out empty,
- * so the pill is put back — the same fix Tools/appstore/compose.py makes for the App
- * Store images.
- *
- * Positioned from the screenshots rather than from a spec sheet: in every export the
- * status-bar glyphs sit at y 38-58 of 1434 (centre 3.35%) and leave a gap from x 153
- * to x 513, centred on the screen's midline. The island is centred on that same point,
- * 28.4% wide and 3.77% tall — the real 125x36pt island against a 440x956pt screen,
- * which lands inside the measured gap with room either side.
- */
-.phone .island {
   position: absolute;
-  left: 50%;
-  top: 3.35%;
-  translate: -50% -50%;
-  width: 28.4%;
-  height: 3.77%;
+  left: 4.167%;
+  top: 1.729%;
+  width: 91.667%;
+  height: 96.541%;
+  overflow: hidden;
+  border-radius: 12.654% / 6.165%;
   background: #000;
-  border-radius: 999px;
 }
+
+.phone .screen img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.phone .frame { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 /* ---- Header ------------------------------------------------------------- */
 
@@ -250,10 +235,7 @@ section { padding-block: clamp(72px, 11vw, 140px); }
 }
 .masthead nav a { text-decoration: none; color: var(--ink-2); transition: color .15s ease; }
 .masthead nav a:hover { color: var(--ink); }
-.masthead .store { padding: 8px 15px 9px; border-radius: 9px; }
-.masthead .store svg { width: 21px; height: 21px; }
-.masthead .store .small { font-size: 0.58rem; }
-.masthead .store .big { font-size: 0.95rem; }
+.masthead .store img { height: 40px; }
 
 /* ---- Hero --------------------------------------------------------------- */
 
@@ -429,8 +411,8 @@ footer .base {
 @media (max-width: 560px) {
   body { font-size: 16px; }
   .features .grid { grid-template-columns: 1fr; max-width: 420px; margin-inline: auto; }
-  .masthead .store .small, .masthead .store .big { font-size: 0.8rem; }
-  .masthead .store .small { display: none; }
+  .masthead .store img { height: 40px; }   /* Apple's floor for web is 40px */
+  .hero .cta .store img { height: 50px; }
   footer .cols { grid-template-columns: 1fr; gap: 32px; }
 }
 

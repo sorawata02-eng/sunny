@@ -27,8 +27,19 @@ legal pages and to `support.html`; keeping them apart is what stops
 
 Screenshots in `img/` are exported from `Tools/appstore/captures/` at 660px wide — the
 raw simulator captures rather than the finished App Store images, so the marketing
-headline and the subscription-required line are not baked in twice. Phone frames are
-drawn in CSS.
+headline and the subscription-required line are not baked in twice.
+
+`img/phone-frame.webp` is the device they sit inside: one transparent overlay with the
+screen punched out, rendered by `Tools/appstore/frame.py` from the same code that draws
+the App Store screenshots, so the site and the store show the same phone. Re-run that
+script if the frame changes and paste its printed geometry into `site.css` — the hole and
+the screenshot behind it have to agree to the pixel.
+
+`img/appstore-badge.svg` is Apple's own Japanese badge artwork, not a redraw of it.
+Apple's guidelines: never recolour or rebuild it, and never render it under 40px tall.
+
+`img/mark.png` is the app icon's sunrise, extracted from `icon-1024.png` as an alpha
+mask so the wordmark cannot drift from the icon the App Store shows.
 
 The privacy policy and terms are generated from the documents inside the app itself, so
 the published versions and the ones shown on screen cannot drift apart. Edit them in the
