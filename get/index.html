@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sunny をダウンロード</title>
+
+<!-- This page exists to be left. Instagram will not take an App Store link in a bio,
+     so the bio points here and here points at the App Store.
+
+     Three ways out, in order, because the first two are blocked in some in-app
+     browsers and the page must never be a dead end:
+       1. `location.replace` on parse — fastest, and `replace` rather than `href` so
+          Back returns to Instagram instead of bouncing through this page again.
+       2. `<meta http-equiv="refresh">` — covers a browser with JavaScript off.
+       3. The button below — covers a webview that blocks both.
+
+     `?s=` names the source and is passed to Apple as `ct`, so App Store Connect's
+     campaign report can tell Instagram apart from anywhere else this is pasted:
+       .../sunny/get/?s=instagram    .../sunny/get/?s=tiktok -->
+
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
+<meta http-equiv="refresh" content="0; url=https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
+<script>
+  (function () {
+    var base = "https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297";
+    var source = null;
+    try {
+      source = new URLSearchParams(window.location.search).get("s");
+    } catch (e) { /* very old webview: go without the campaign tag rather than not at all */ }
+    var url = source ? base + "?ct=" + encodeURIComponent(source.slice(0, 40)) + "&mt=8" : base;
+    window.location.replace(url);
+  })();
+</script>
+
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0; min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 22px; padding: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+    background: #fff; color: #000; text-align: center;
+  }
+  .mark { width: 64px; aspect-ratio: 320 / 131; background: currentColor;
+          -webkit-mask: url("../img/mark.png") center / contain no-repeat;
+          mask: url("../img/mark.png") center / contain no-repeat; }
+  @supports not (mask: url("../img/mark.png")) {
+    .mark { background: url("../img/mark.png") center / contain no-repeat; }
+  }
+  p { margin: 0; color: #6E6E6E; font-size: 1rem; line-height: 1.7; }
+  a.badge { display: inline-block; line-height: 0; }
+  a.badge img { height: 54px; width: auto; }
+  a.home { color: #9A9A9A; font-size: .88rem; text-underline-offset: 3px; }
+</style>
+</head>
+<body>
+  <span class="mark" aria-hidden="true"></span>
+  <p>App Store に移動しています…</p>
+  <a class="badge" href="https://apps.apple.com/jp/app/sunny-wake-up-alarm/id6799345297">
+    <img src="../img/appstore-badge.svg" width="109" height="40" alt="App Store でダウンロード">
+  </a>
+  <a class="home" href="../">Sunny について</a>
+</body>
+</html>

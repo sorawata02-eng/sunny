@@ -4,9 +4,23 @@ The support page, privacy policy and terms of use for **Sunny**, an iOS alarm ap
 only stops once you have completed a short exercise, verified by the camera.
 
 - **Landing page — <https://sorawata02-eng.github.io/sunny/>** (`index.html`)
+- **Download link — <https://sorawata02-eng.github.io/sunny/get/>** (redirects to the App Store)
 - Support — <https://sorawata02-eng.github.io/sunny/support.html>
 - Privacy Policy — <https://sorawata02-eng.github.io/sunny/privacy.html>
 - Terms of Use — <https://sorawata02-eng.github.io/sunny/terms.html>
+
+## `/get/` is the link to paste, not the App Store URL
+
+Instagram will not take an App Store link in a bio, so the bio points at
+`.../sunny/get/` and that points at the App Store. It is a page that exists to be left:
+it redirects on parse, and carries a `<meta refresh>` and a visible badge behind that,
+because in-app browsers block one or the other and the link must never dead-end.
+
+Add `?s=` to name the source and it reaches Apple as `ct`, so App Store Connect's
+campaign report can tell one placement from another:
+
+    .../sunny/get/?s=instagram
+    .../sunny/get/?s=tiktok
 
 ## The root is the landing page now
 
