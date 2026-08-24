@@ -113,14 +113,42 @@ section { padding-block: clamp(72px, 11vw, 140px); }
   display: inline-flex;
   line-height: 1;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   text-decoration: none;
   color: var(--ink);
 }
-.wordmark svg { width: 30px; height: auto; color: var(--ink); }
+
+/* The sunrise mark, lifted from the shipped app icon rather than redrawn.
+ *
+ * It was an inline SVG of a sun with rays over a straight horizon, which is not what
+ * Sunny's icon is: a sun sitting behind a long S-curved horizon, no rays, 2.44:1 rather
+ * than square. `Web/img/mark.png` is that shape, extracted from
+ * Sunny/Resources/.../icon-1024.png as an alpha mask, so it cannot drift from the icon
+ * the App Store shows.
+ *
+ * Painted as a mask over `currentColor` rather than dropped in as an <img>, so the mark
+ * takes the wordmark's ink colour and stays one colour with the text beside it.
+ */
+.wordmark .mark {
+  width: 44px;
+  aspect-ratio: 320 / 131;
+  flex: none;
+  background: currentColor;
+  -webkit-mask: url("img/mark.png") center / contain no-repeat;
+  mask: url("img/mark.png") center / contain no-repeat;
+}
+
+/* Without masking, `background: currentColor` above would paint a solid black bar where
+ * the logo goes — a worse failure than any mark at all. The PNG is already black with
+ * an alpha channel, so drawing it directly is the same picture by another route. */
+@supports not (mask: url("img/mark.png")) {
+  .wordmark .mark {
+    background: url("img/mark.png") center / contain no-repeat;
+  }
+}
 
 /* ---- App Store button --------------------------------------------------- */
 /* A stand-in for Apple's official badge artwork — same shape, same wording, drawn
@@ -145,31 +173,54 @@ section { padding-block: clamp(72px, 11vw, 140px); }
 .store .big { font-size: 1.16rem; font-weight: 700; letter-spacing: -0.01em; }
 
 /* ---- Phone mockup ------------------------------------------------------- */
-/* One aspect ratio serves every screenshot: the five exports are 660x1434 apart
- * from the camera capture at 660x1431, which is a third of a percent away. */
+/*
+ * The screenshot sits *inside* the frame, which sounds obvious and was not what the
+ * first version did. It inset the image with `top/bottom: 2.4%; left/right: 2.7%` —
+ * and a percentage inset resolves against the containing block's **height** for
+ * top/bottom but its **width** for left/right. On a phone twice as tall as it is wide
+ * that made the top bezel nearly four times the side bezel, and the screen's corner
+ * radius no longer followed the frame's. The result read exactly as it was: a
+ * screenshot pasted on top of a black rectangle.
+ *
+ * Now the bezel is `padding` in percent, which resolves against width on all four
+ * sides and so is uniform, and the image drives the height. Every radius below is the
+ * real device's, expressed against this box.
+ */
 
 .phone {
-  position: relative;
-  aspect-ratio: 660 / 1434;
   background: var(--bezel);
-  border-radius: 14% / 6.4%;
+  padding: 2.3%;                       /* uniform: % padding is always of width */
+  border-radius: 14% / 6.6%;           /* 62pt corner on a 456pt-wide device */
   box-shadow: 0 30px 60px -22px rgba(0,0,0,.30), 0 10px 24px -12px rgba(0,0,0,.18);
 }
-.phone img {
-  position: absolute;
-  top: 2.4%; bottom: 2.4%; left: 2.7%; right: 2.7%;
-  width: auto; height: auto;
-  object-fit: cover;
-  border-radius: 11.5% / 5.3%;
+
+.phone .screen {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 12.3% / 5.66%;        /* device radius less the bezel */
+  background: #000;
 }
-/* The simulator draws the status bar but leaves the island's cut-out empty, so the
- * pill is put back here — the same fix Tools/appstore/compose.py makes for the
- * App Store images. Verified against the exports: nothing is drawn underneath. */
-.phone::after {
-  content: "";
+
+.phone img { display: block; width: 100%; height: auto; }
+
+/* The Dynamic Island. The simulator draws the status bar but leaves the cut-out empty,
+ * so the pill is put back — the same fix Tools/appstore/compose.py makes for the App
+ * Store images.
+ *
+ * Positioned from the screenshots rather than from a spec sheet: in every export the
+ * status-bar glyphs sit at y 38-58 of 1434 (centre 3.35%) and leave a gap from x 153
+ * to x 513, centred on the screen's midline. The island is centred on that same point,
+ * 28.4% wide and 3.77% tall — the real 125x36pt island against a 440x956pt screen,
+ * which lands inside the measured gap with room either side.
+ */
+.phone .island {
   position: absolute;
-  top: 3.4%; left: 50%; translate: -50% 0;
-  width: 27%; height: 2.7%;
+  left: 50%;
+  top: 3.35%;
+  translate: -50% -50%;
+  width: 28.4%;
+  height: 3.77%;
   background: #000;
   border-radius: 999px;
 }
@@ -244,7 +295,13 @@ section { padding-block: clamp(72px, 11vw, 140px); }
 .hero .fineprint { color: var(--ink-3); font-size: 0.88rem; margin-top: 18px; }
 
 .hero-art { display: flex; align-items: center; justify-content: center; }
-.hero-art .phone { width: 47%; }
+
+/* The pair should clear the fold on a laptop, and on a laptop the constraint is height,
+ * not width. A rotated phone's bounding box is about 2.17x its width, and the space
+ * above the fold is the viewport less the header (78px) and the hero's top padding —
+ * so `46vh - 88px` is the widest phone that still fits. It only bites on short
+ * viewports: at 800px tall it lands on the same 47% the width rule already gives. */
+.hero-art .phone { width: min(47%, calc(46vh - 88px)); }
 .hero-art .phone:first-child { rotate: -8deg; translate: 0 4%; z-index: 1; }
 .hero-art .phone:last-child  { rotate: 6deg;  translate: -7% -5%; z-index: 2; }
 
