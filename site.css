@@ -274,7 +274,6 @@ section { padding-block: clamp(72px, 11vw, 140px); }
   max-width: 30em;
 }
 .hero .cta { margin-top: 38px; display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
-.hero .fineprint { color: var(--ink-3); font-size: 0.88rem; margin-top: 18px; }
 
 .hero-art { display: flex; align-items: center; justify-content: center; }
 
