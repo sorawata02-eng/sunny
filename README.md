@@ -3,11 +3,34 @@
 The support page, privacy policy and terms of use for **Sunny**, an iOS alarm app that
 only stops once you have completed a short exercise, verified by the camera.
 
-- **Landing page — <https://sorawata02-eng.github.io/sunny/>** (`index.html`)
-- **Download link — <https://sorawata02-eng.github.io/sunny/get/>** (redirects to the App Store)
-- Support — <https://sorawata02-eng.github.io/sunny/support.html>
-- Privacy Policy — <https://sorawata02-eng.github.io/sunny/privacy.html>
-- Terms of Use — <https://sorawata02-eng.github.io/sunny/terms.html>
+- **Landing page — <https://sunnyalarm.pages.dev/>** (`index.html`)
+- **Download link — <https://sunnyalarm.pages.dev/get/>** (redirects to the App Store)
+- Support — <https://sunnyalarm.pages.dev/support.html>
+- Privacy Policy — <https://sunnyalarm.pages.dev/privacy.html>
+- Terms of Use — <https://sunnyalarm.pages.dev/terms.html>
+
+## Where this is hosted, and where it used to be
+
+**Cloudflare Pages, project `sunnyalarm`** — <https://sunnyalarm.pages.dev/>
+
+    wrangler pages deploy Web --project-name sunnyalarm --branch main
+
+It moved off GitHub Pages on 25 August 2026, once 1.2 was approved and live. The reason
+was the hostname: `sorawata02-eng.github.io` carries a personal account name, and this
+URL goes in an Instagram bio. Cloudflare Pages is free and the project name is the whole
+hostname, so nothing about the account appears in it.
+
+**The old site is still live and must stay that way for now.** Apple holds
+`sorawata02-eng.github.io/sunny/...` for the shipped 1.2, and the live App Store
+description links to its Terms and Privacy pages. Privacy Policy URL is app-level and can
+be changed on a live app; Support URL and the description travel with the version and
+change at the next submission. Until then, **deploy content changes to both hosts** —
+`git subtree push --prefix=Web pages main` still works — and leave that repo public.
+
+One behaviour difference worth knowing: Cloudflare Pages strips `.html`, so
+`/privacy.html` 308-redirects to `/privacy`. Both resolve. The pages' own internal links
+keep the `.html` form deliberately, because that is what works on *both* hosts —
+GitHub Pages has no such rewrite and would 404 on the bare name.
 
 ## `/get/` is the link to paste, not the App Store URL
 
